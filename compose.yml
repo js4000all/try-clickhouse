@@ -1,0 +1,22 @@
+services:
+  ch:
+    image: clickhouse/clickhouse-server:25.8
+
+    ports:
+      - "8123:8123"
+
+    environment:
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+      QUERY_USER: ${QUERY_USER}
+      QUERY_PASSWORD: ${QUERY_PASSWORD}
+
+    volumes:
+      - ./clickhouse/config.d/custom-settings.xml:/etc/clickhouse-server/config.d/custom-settings.xml:ro
+      - ./clickhouse/initdb.d:/docker-entrypoint-initdb.d:ro
+
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
