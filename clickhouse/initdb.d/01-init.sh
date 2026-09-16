@@ -77,4 +77,21 @@ GRANT SELECT ON telemetry.v_meas_enriched TO ${QUERY_USER};
 GRANT READ ON FILE TO ${QUERY_USER};
 GRANT CREATE TEMPORARY TABLE ON *.* TO ${QUERY_USER};
 
+CREATE DICTIONARY telemetry.metric_dict
+(
+    metric String,
+    display_name String
+)
+PRIMARY KEY metric
+SOURCE(
+    FILE(
+        PATH '/var/lib/clickhouse/user_files/dictionary/metric.csv'
+        FORMAT 'CSVWithNames'
+    )
+)
+LIFETIME(MIN 0 MAX 0)
+LAYOUT(COMPLEX_KEY_HASHED());
+
+GRANT SELECT ON telemetry.metric_dict TO ${QUERY_USER};
+
 DDL
