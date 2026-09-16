@@ -4,7 +4,7 @@ set -euo pipefail
 clickhouse client \
     --user "${CLICKHOUSE_USER}" \
     --password "${CLICKHOUSE_PASSWORD}" \
-    --multiquery <<SQL
+    --multiquery <<DDL
 
 CREATE DATABASE IF NOT EXISTS telemetry;
 
@@ -54,4 +54,21 @@ INSERT INTO telemetry.metric_meta VALUES
     ('temperature', '気温'),
     ('humidity',    '湿度');
 
-SQL
+
+CREATE VIEW telemetry.v_meas_enriched
+SQL SECURITY INVOKER
+AS
+SELECT
+    m.metric,
+    mm.display_name,
+    m.tenant,
+    m.value,
+    m.observed_at,
+    m.ingested_at
+FROM telemetry.meas AS m
+LEFT JOIN telemetry.metric_meta AS mm
+    ON m.metric = mm.metric;
+
+GRANT SELECT ON telemetry.v_meas_enriched TO ${QUERY_USER};
+
+DDL
