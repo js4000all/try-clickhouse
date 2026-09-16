@@ -1,6 +1,7 @@
 services:
   ch:
     image: clickhouse/clickhouse-server:25.8
+    user: "101:101"
 
     ports:
       - "8123:8123"
@@ -15,6 +16,7 @@ services:
     volumes:
       - ./clickhouse/config.d/custom-settings.xml:/etc/clickhouse-server/config.d/custom-settings.xml:ro
       - ./clickhouse/initdb.d:/docker-entrypoint-initdb.d:ro
+      - ./clickhouse/dictionary:/var/lib/clickhouse/user_files/dictionary:ro
 
     ulimits:
       nofile:

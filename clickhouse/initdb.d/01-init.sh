@@ -74,4 +74,7 @@ LEFT JOIN telemetry.metric_meta AS mm
 
 GRANT SELECT ON telemetry.v_meas_enriched TO ${QUERY_USER};
 
+GRANT READ ON FILE TO ${QUERY_USER};
+GRANT CREATE TEMPORARY TABLE ON *.* TO ${QUERY_USER};
+
 DDL
